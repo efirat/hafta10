@@ -1,19 +1,29 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
-function C1({sayac, sayacGuncelle}){
+function C1(){
+    const [sayac, setSayac] = useState(0)
 
     useEffect(()=>{
-        console.log("C1 render oldu")
-    },[sayac])
+        const surekliIslem1 = setInterval(() => {
+            console.log("Interval çalıştı")
+        }, 2000);
+
+
+        //cleanup function (useeffect icin gecerli)
+        //component unmounth oldugunda ya da Re-render (Yeniden render) oncesinde tetiklenir
+        return () => {
+            clearInterval(surekliIslem1)
+            console.log("Interval temizlendi")
+        }
+
+    }, [])
 
     return(
         <>
             <div className="bg-success-subtle p-3">
-                Ben C1 komponentiyim...
-
-                <button onClick={()=>{sayacGuncelle(eskiDeger=>eskiDeger+1)}} className="btn btn-sm btn-outline-danger mx-3">{sayac}</button>
+                C1 komponenti
+                <button className="btn btn-sm btn-outline-danger ms-3" onClick={()=>{setSayac(eskiDeger=>eskiDeger+5)}}>{sayac}</button>
             </div>
-
         </>
     )
 }
