@@ -2,21 +2,31 @@ import { useEffect, useState } from "react";
 
 function C1(){
     const [sayac, setSayac] = useState(0)
+    const [baglanti, setBaglanti] = useState(navigator.onLine)
 
     useEffect(()=>{
-        const surekliIslem1 = setInterval(() => {
-            console.log("Interval çalıştı")
-        }, 2000);
-
-
-        //cleanup function (useeffect icin gecerli)
-        //component unmounth oldugunda ya da Re-render (Yeniden render) oncesinde tetiklenir
-        return () => {
-            clearInterval(surekliIslem1)
-            console.log("Interval temizlendi")
+        function pencereDegisti(e){
+            const yatayMi = (e.target.innerWidth / e.target.innerHeight) > 1 ? true : false
+            //console.log(e.target.innerWidth)
+            console.log(yatayMi + "Pencere ölçüleri değişti..")
         }
 
+        window.addEventListener("resize", pencereDegisti)
+
+        return ()=>{
+            window.removeEventListener("resize", pencereDegisti)
+        }
     }, [])
+
+    useEffect(()=>{
+        const surekliIlsem = setInterval(() => {
+            setBaglanti(navigator.onLine)
+        }, 1000);
+
+        return () =>{
+            clearInterval(surekliIlsem);
+        }
+    },[])
 
     return(
         <>
@@ -24,6 +34,9 @@ function C1(){
                 C1 komponenti
                 <button className="btn btn-sm btn-outline-danger ms-3" onClick={()=>{setSayac(eskiDeger=>eskiDeger+5)}}>{sayac}</button>
             </div>
+            {
+                !baglanti? <div className="alert alert-danger mt-3">Bağlantı kesildi!</div> : ""
+            }
         </>
     )
 }
